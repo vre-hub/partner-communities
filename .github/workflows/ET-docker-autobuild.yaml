@@ -1,0 +1,127 @@
+name: Docker automatic build and publish when changes in ET containers dir
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ET/**
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-matrix-from-changed-dirs:
+    runs-on: ubuntu-latest 
+    name: Build matrix from directories with changed files
+
+    steps:
+      - name: Docker Checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 2  # "0" (OR "2" -> To retrieve the preceding commit).
+
+      - name: Run changed-files with dir_names
+        id: changed-files
+        uses: tj-actions/changed-files@v41.0.1
+        with:
+          files: |
+            ET/**
+            !ET/**/README.md
+          dir_names: "true"
+          dir_names_exclude_current_dir: "true"
+
+      - name: List all changed dirs 
+        id: format-output
+        run: |
+          echo "Parsing changed directories..."
+
+          declare -A seen_dirs
+          containers=()
+
+          for dir in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$dir was changed"
+
+            # Extract top-level dir name 
+            top_level_dir=$(echo "$dir" | cut -d'/' -f3)
+
+            # And avoid duplications
+            if [[ -n "${seen_dirs[$top_level_dir]}" ]]; then
+              echo " - $top_level_dir already added, skipping"
+              continue
+            fi
+
+            echo " - $top_level_dir is a new dir, adding it"
+            seen_dirs[$top_level_dir]=1
+            containers+=("\"${top_level_dir}\"")
+      
+          done
+
+          CONT_LIST=`echo "[${containers[*]}]" |  sed 's/ /,/g'`
+          echo "Updated containers list: $CONT_LIST"
+
+          echo "container_list=$CONT_LIST" >> "$GITHUB_OUTPUT"
+      
+    outputs:
+      modified_containers: ${{ steps.format-output.outputs.container_list }}  
+
+  build-and-push-modified-containers:
+    if: needs.build-matrix-from-changed-dirs.outputs.modified_containers != '[]'
+    needs: build-matrix-from-changed-dirs
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        containers: ${{ fromJSON(needs.build-matrix-from-changed-dirs.outputs.modified_containers) }} 
+    
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Docker Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Action for git describe
+        id: ghd
+        uses: proudust/gh-describe@v1.6.0
+
+      - name: Check gh-describe output
+        run: |
+          echo "describe  : ${{ steps.ghd.outputs.describe }}"
+          echo "tag       : ${{ steps.ghd.outputs.tag }}"
+          echo "distance  : ${{ steps.ghd.outputs.distance }}"
+          echo "sha       : ${{ steps.ghd.outputs.sha }}"
+          echo "short-sha : ${{ steps.ghd.outputs.short-sha }}"
+
+      - name: Log in to the GH Container Registry
+        id: login
+        uses: docker/login-action@v3.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata for ET ${{ matrix.containers }}
+        id: metadata
+        uses: docker/metadata-action@v5.3.0
+        with:
+          flavor: |
+            latest=true
+          tags: |
+            type=raw,value=${{ steps.ghd.outputs.tag }}-${{ steps.ghd.outputs.distance }}-${{ steps.ghd.outputs.short-sha }}
+          # Expected format: ghcr.io/vre-hub/{et}-{container_name}:{tag}
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/et-${{ matrix.containers }}
+
+      - name: Build and push ET ${{ matrix.containers }}
+        id: build
+        uses: docker/build-push-action@v5.1.0
+        with:
+          context: ET/containers/${{ matrix.containers }}
+          file: ET/containers/${{ matrix.containers }}/Dockerfile
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          # The version of the base image of all ops containers is the latest tag of the base-ops image
+          build-args: | 
+            BUILD_DATE=$(date +'%Y-%m-%dT%H:%M:%SZ')          
+            TAG=${{ steps.ghd.outputs.tag }}
