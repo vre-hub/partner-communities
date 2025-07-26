@@ -5,7 +5,7 @@ FROM ${BASEIMAGE}:${BASETAG}
 
 USER root
 
-# EGI trust anchors
+# Install EGI trust anchors
 RUN curl -Lo /etc/yum.repos.d/egi-trustanchors.repo https://repository.egi.eu/sw/production/cas/1/current/repo-files/egi-trustanchors.repo \
     && yum update -y \
     && dnf -y install ca-certificates ca-policy-egi-core
