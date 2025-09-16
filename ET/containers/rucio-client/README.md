@@ -4,10 +4,10 @@ This directory contains the Dockerfile for the Rucio client enabled for the ET V
 
 Please refer to the official [Rucio clients repo](https://github.com/rucio/containers/tree/master/clients) for more information.
 
-The Docker image for this project can be pulled with:
+The Docker images for this project can be found [here](https://github.com/vre-hub/vre/pkgs/container/et-rucio-client) and it can be pulled with:
 
 ```bash
-$ docker pull ghcr.io/vre-hub/et-rucio-client:latest
+$ docker pull ghcr.io/vre-hub/et-rucio-client<:imagetag>
 ```
 
 ## Run with token authentication
@@ -15,7 +15,7 @@ $ docker pull ghcr.io/vre-hub/et-rucio-client:latest
 You only need to run the container setting your Rucio account name via the appropriate Rucio environment variable inside the container:
 
 ```bash
-$ docker run --rm --user root -e RUCIO_CFG_CLIENT_ACCOUNT=<myrucioname> -it --name=et-rucio-client ghcr.io/vre-hub/et-rucio-client
+$ docker run --rm --user root -e RUCIO_CFG_CLIENT_ACCOUNT=<myrucioname> -it --name=et-rucio-client ghcr.io/vre-hub/et-rucio-client<:imagetag>
 ```
 
 As soon as you execute a rucio command without a valid token, you will be presented with a personalized link to the ET Indigo IAM. Open the link in a browser and authenticate to the ET Indigo IAM. Go back to the container; Rucio will retrtieve the token from ET Indigo IAM automatically and place it in `/tmp/root/.rucio_root/auth_token_for_account_<myrucioname>`.
