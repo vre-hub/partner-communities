@@ -1,5 +1,5 @@
 ARG BASEIMAGE=rucio/rucio-clients
-ARG BASETAG=release-35.7.0
+ARG BASETAG=release-38.5.1
 
 FROM ${BASEIMAGE}:${BASETAG}
 
@@ -20,8 +20,7 @@ WORKDIR /home/user
 # ET Rucio client default configuration
 ADD --chown=user:user rucio.default.cfg.et /opt/user/rucio.default.cfg
 
-# Multi-RI hostfile and CE Rucio client configuration
-ADD hostfile /opt/rucio/etc/hostfile
+# CE Rucio client configuration
 ADD rucio_CE.cfg /opt/rucio/etc/rucio_CE.cfg
 
 ENTRYPOINT ["/bin/bash"]

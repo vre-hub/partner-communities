@@ -12,10 +12,10 @@ $ docker pull ghcr.io/vre-hub/et-rucio-client<:imagetag>
 
 ## Run with token authentication
 
-You only need to run the container setting your Rucio account name via the appropriate Rucio environment variable inside the container:
+You only need to run the container: 
 
 ```bash
-$ docker run --rm --user root -e RUCIO_CFG_CLIENT_ACCOUNT=<myrucioname> -it --name=et-rucio-client ghcr.io/vre-hub/et-rucio-client<:imagetag>
+$ docker run --rm --user root -it --name=et-rucio-client ghcr.io/vre-hub/et-rucio-client<:imagetag>
 ```
 
-As soon as you execute a rucio command without a valid token, you will be presented with a personalized link to the ET Indigo IAM. Open the link in a browser and authenticate to the ET Indigo IAM. Go back to the container; Rucio will retrtieve the token from ET Indigo IAM automatically and place it in `/tmp/root/.rucio_root/auth_token_for_account_<myrucioname>`.
+As soon as you execute a rucio command without a valid token, you will be presented with a personalized link to the ET Indigo IAM. Open the link in a browser and authenticate to the ET Indigo IAM. Go back to the container; Rucio will retrtieve the token from ET Indigo IAM automatically and place it in `/tmp/root/.rucio_root/auth_token_for_default_account`.

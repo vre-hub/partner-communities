@@ -1,11 +1,24 @@
+[common]
+logdir = /var/log/rucio
+loglevel = DEBUG
+logformat = %%(asctime)s\t%%(process)d\t%%(levelname)s\t%%(message)s
+mailtemplatedir=/opt/rucio/etc/mail_templates
+
 [client]
 rucio_host = https://et-rucio-server.to.infn.it:443
 auth_host = https://et-rucio-server.to.infn.it:443
 auth_type = oidc
 oidc_issuer = et-indigo-iam
 oidc_audience = rucio
-oidc_scope = openid profile
+oidc_scope = openid profile offline_access
 oidc_polling = true
 auth_oidc_refresh_activate = true
 request_retries = 3
-hostfile = /opt/rucio/etc/hostfile
+multi_ri_commands = whoami, ping, list
+multi_ri_servers = ET server, CE server
+
+[ET server]
+config_file = /opt/rucio/etc/rucio.cfg
+
+[CE server]
+config_file = /opt/rucio/etc/rucio_CE.cfg
