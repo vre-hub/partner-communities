@@ -14,8 +14,8 @@ oidc_scope = openid profile offline_access
 oidc_polling = true
 auth_oidc_refresh_activate = true
 request_retries = 3
-multi_ri_commands = whoami, ping, list
-multi_ri_servers = ET server, CE server
+multi_host_commands = whoami, ping, list, download
+multi_host_servers = ET server, CE server
 
 [ET server]
 config_file = /opt/rucio/etc/rucio.cfg
