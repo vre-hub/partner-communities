@@ -105,12 +105,16 @@ jobs:
         id: metadata
         uses: docker/metadata-action@v5.3.0
         with:
-          flavor: |
-            latest=true
-          tags: |
-            type=raw,value=${{ steps.ghd.outputs.tag }}-${{ steps.ghd.outputs.distance }}-${{ steps.ghd.outputs.short-sha }}
-          # Expected format: ghcr.io/vre-hub/{et}-{container_name}:{tag}
+          # Expected format: ghcr.io/vre-hub/et-{container_name}:{tag}
           images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/et-${{ matrix.containers }}
+          flavor: |
+            # Add latest only if triggered by a git tag
+            latest=${{ steps.ghd.outputs.distance == '0' && !contains(github.ref_name, '-rc') }}
+          tags: |
+            # If triggered by a git tag, use the tag name only
+            type=raw,value=${{ steps.ghd.outputs.tag }},enable=${{ steps.ghd.outputs.distance == '0' }}
+            # If triggered by a branch push, include distance + sha
+            type=raw,value=${{ steps.ghd.outputs.tag }}-${{ steps.ghd.outputs.distance }}-${{ steps.ghd.outputs.short-sha }},enable=${{ steps.ghd.outputs.distance != '0' }}
 
       - name: Build and push ET ${{ matrix.containers }}
         id: build
