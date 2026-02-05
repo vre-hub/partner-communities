@@ -156,7 +156,6 @@ if __name__ == "__main__":
                 clean_cached_config()
                 os.environ['RUCIO_CONFIG'] = config
                 print('Result from {}.'.format(host))
-            
                 run_command(args, use_multi_host)
         else:
             run_command(args, use_multi_host)
