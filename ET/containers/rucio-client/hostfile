@@ -1,3 +1,0 @@
-whoami,list-dids,ping,list-file-replicas,list-dataset-replicas,ls,list-dids-extended,list-parent-dids,list-parent-datasets,list-scopes,stat,list-files,list-content,list-content-history,get,download,get-metadata,list-rse-usage,list-account-usage,list-account-limits,rule-info,list-rules,list-rules-history,list-rses,list-suspicious-replicas,list-rse-attributes,list-datasets-rse,
-ET server,/opt/rucio/etc/rucio.cfg
-CE server,/opt/rucio/etc/rucio_CE.cfg
