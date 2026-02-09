@@ -28,7 +28,7 @@ Images for Rucio client versions `35.7.0` and `38.5.1` contain the multi-RI capa
 
 Every new commit to the `main` branch of this project that modifies a file in the `ET/containers/rucio-client` directory (except for the `README.md` file) triggers the build of a new `et-rucio-client` docker image in the [container registry](https://github.com/vre-hub/vre/pkgs/container/et-rucio-client). Starting from image tag `38.5.1-mri`, the naming of the image tag follows these rules:
 
-- If the commit has an associated git tag, use the git tag as the docker image tag. If in addition the git tag doesn't contain the string `-rc`, move the `latest` image tag to this docker image. These are the images that are supposed to be good for use. Users should always use the image with the `latest` tag.
+- If the commit has an associated git tag, use the git tag as the docker image tag. If in addition the git tag doesn't contain the string `-rc`, move the `latest` image tag to this docker image. These are the images that are supposed to be good for use. **Users should always use the image with the `latest` tag.**
 
 - Otherwise, use the latest git tag in the history of the `main` branch and add to it a string of the kind `-N-SHA` where `N` is the distance (measured in number of commits) from the latest tag in the `main` branch, and `SHA` is the short SHA of the commit that triggered the build.
 
