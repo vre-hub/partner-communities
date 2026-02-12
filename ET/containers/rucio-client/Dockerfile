@@ -18,8 +18,7 @@ USER user
 WORKDIR /home/user
 
 # ET Rucio client default configuration
-#ADD --chown=user:user rucio.default.cfg.et /opt/user/rucio.default.cfg
-ADD rucio.default.cfg.et /opt/rucio/etc/rucio.cfg
+ADD --chown=user:user rucio.default.cfg.et /opt/user/rucio.default.cfg
 
 # CE Rucio client configuration
 ADD rucio_CE.cfg /opt/rucio/etc/rucio_CE.cfg
