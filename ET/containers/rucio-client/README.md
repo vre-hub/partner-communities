@@ -26,7 +26,7 @@ $ docker run --rm --user root -it --name=et-rucio-client ghcr.io/vre-hub/et-ruci
 
 As soon as you execute a rucio command without a valid token, you will be presented with a personalized link to the ET Indigo IAM. Open the link in a browser and authenticate to the ET Indigo IAM. Go back to the container; Rucio will retrtieve the token from ET Indigo IAM automatically and place it in `/tmp/root/.rucio_root/auth_token_for_default_account` (the `root` parts in this path correspond to the user you are inside the container, which is the user set via the `--user` option in the `docker run` command above).
 
-Images for Rucio client versions 35.7.0 and 38.5.1 contain the multi-RI capable client in a separate executable named `rucio-mri`, because on those versions the multi-RI capable client was not yet part of the official Rucio release.
+**Note**: *Images for Rucio client versions 35.7.0 and 38.5.1 contain the multi-RI capable client in a separate executable named `rucio-mri`, because on those versions the multi-RI capable client was not yet part of the official Rucio release.*
 
 ## Image tag naming rules and convention
 
