@@ -28,6 +28,44 @@ As soon as you execute a rucio command without a valid token, you will be presen
 
 **Note**: *Images for Rucio client versions 35.7.0 and 38.5.1 contain the multi-RI capable client in a separate executable named `rucio-mri`, because on those versions the multi-RI capable client was not yet part of the official Rucio release.*
 
+## Build your own docker image
+
+You can build your own docker image from the Dockerfile and configuration files provided in this repository. Assuming you have all those files in one common directory and that you are inside that directory, you can run the following command to build an image:
+
+```
+$ docker build --tag my-et-rucio-client-image .
+```
+
+You can then run a container from this image:
+
+```
+$ docker run --rm --user root -it --name=my-et-rucio-client my-et-rucio-client-image
+```
+
+## Configuration
+
+The Rucio client configuration files inside the container are:
+
+- ET (and default) Rucio client configuration file: `/opt/rucio/etc/rucio.cfg`
+
+   This file is a copy of the `rucio.default.cfg.et` file in this repository, merged with any additional configuration parameters defined via environment variables prefixed with `RUCIO_CFG_` passed inside the container by means of the `--env (-e)` option of the `docker run` command. The environment variables must have the form `RUCIO_CFG_<section>_<parameter>`, where `<section>` and `<parameter>` are a client configuration section and parameter respectively. Here is an example that overrides the `request_retries` parameter of the `client` section with the value `2`:
+
+   ```
+   $ docker run --rm --user root -it -e RUCIO_CFG_CLIENT_REQUEST_RETRIES=2 --name=my-et-rucio-client ghcr.io/vre-hub/et-rucio-client[:imagetag]
+   ```
+
+   Of course, the same method can be used to define new parameters that are not already present in the configuration file.
+
+- CE Rucio client configuration file: `/opt/rucio/etc/rucio_CE.cfg`
+
+   This file is a copy of the `rucio_CE.cfg` file in this repository. This configuration file is referenced from the ET configuration file.
+
+If you want to use your own custom configuration file, instead of overriding single parameters via environment variables like shown above, you can bind mount your configuration file into the container by means of the `--volume (-v)` option of the `docker run` command. Here is an example that bind mounts the local file `/path/to/my/rucio/config/file` into the container at `/opt/rucio/etc/rucio.cfg`, effectively replacing the default configuration file:
+
+```
+$ docker run --rm --user root -it -v /path/to/my/rucio/config/file:/opt/rucio/etc/rucio.cfg --name=my-et-rucio-client ghcr.io/vre-hub/et-rucio-client[:imagetag]
+```
+
 ## Image tag naming rules and convention
 
 Every new commit to the `main` branch of this project that modifies a file in the `ET/containers/rucio-client` directory (except for the `README.md` file) triggers the build of a new `et-rucio-client` docker image in the [container registry](https://github.com/vre-hub/vre/pkgs/container/et-rucio-client). Starting from image tag `38.5.1-mri`, the naming of the image tag follows these rules:
@@ -49,17 +87,3 @@ The idea behind these rules is the following:
    For case a), the git tag of the commit should be the rucio client version plus a string `-rcN` where `N` is the release candidate number, for example `39.3.0-rc1`. The `latest` tag will not move, so users will not be affected by the creation of release candidate images, but test users will be able to use them and they will know from the image tag name that this is a release canditate, not a final release.
 
    For case b), the git tag of the commit should be the rucio client version, for example `39.3.0`. The `latest` tag will move and point to this image.
-
-## Build your own docker image
-
-You can build your own docker image from the Dockerfile and configuration files provided in this repository. Assuming you have all those files in one common directory and that you are inside that directory, you can run the following command to build an image:
-
-```
-$ docker build --tag my-et-rucio-client-image .
-```
-
-You can then run a container from this image:
-
-```
-$ docker run --rm --user root -it --name=my-et-rucio-client my-et-rucio-client-image
-```
