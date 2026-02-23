@@ -46,7 +46,7 @@ $ docker run --rm --user root -it --name=my-et-rucio-client my-et-rucio-client-i
 
 The Rucio client configuration files inside the container are:
 
-- ET (and default) Rucio client configuration file: `/opt/rucio/etc/rucio.cfg`
+- ET Rucio client configuration file: `/opt/rucio/etc/rucio.cfg` (this is the default location of the Rucio client configuration file)
 
    This file is a copy of the `rucio.default.cfg.et` file in this repository, merged with any additional configuration parameters defined via environment variables prefixed with `RUCIO_CFG_` passed inside the container by means of the `--env (-e)` option of the `docker run` command. The environment variables must have the form `RUCIO_CFG_<section>_<parameter>`, where `<section>` and `<parameter>` are a client configuration section and parameter respectively. Here is an example that overrides the `request_retries` parameter of the `client` section with the value `2`:
 
@@ -60,10 +60,10 @@ The Rucio client configuration files inside the container are:
 
    This file is a copy of the `rucio_CE.cfg` file in this repository. This configuration file is referenced from the ET configuration file.
 
-If you want to use your own custom configuration file, instead of overriding single parameters via environment variables like shown above, you can bind mount your configuration file into the container by means of the `--volume (-v)` option of the `docker run` command. Here is an example that bind mounts the local file `/path/to/my/rucio/config/file` into the container at `/opt/rucio/etc/rucio.cfg`, effectively replacing the default configuration file:
+If you want to use your own custom configuration file, instead of overriding single parameters via environment variables like shown above, you can bind mount your configuration file into the container by means of the `--volume (-v)` option of the `docker run` command. Here is an example that bind mounts the local file `/path/to/my/rucio.cfg` into the container at `/opt/rucio/etc/rucio.cfg`, effectively replacing the ET configuration file:
 
 ```
-$ docker run --rm --user root -it -v /path/to/my/rucio/config/file:/opt/rucio/etc/rucio.cfg --name=my-et-rucio-client ghcr.io/vre-hub/et-rucio-client[:imagetag]
+$ docker run --rm --user root -it -v /path/to/my/rucio.cfg:/opt/rucio/etc/rucio.cfg --name=my-et-rucio-client ghcr.io/vre-hub/et-rucio-client[:imagetag]
 ```
 
 ## Image tag naming rules and convention
