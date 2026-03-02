@@ -66,13 +66,9 @@ If you want to use your own custom configuration file, instead of overriding sin
 $ docker run --rm --user root -it -v /path/to/rucio.cfg:/opt/rucio/etc/rucio.cfg --name=my-et-rucio-client ghcr.io/vre-hub/et-rucio-client[:imagetag]
 ```
 
-Similarly, you can bind mount other files or even whole directories that you may need to have inside the container. For example, if you are using authentication with X.509, you will need to have your certificate and private key inside the container. Or if you will upload files to Rucio, you will need to mount the whole directory containing the files. As a general rule, use always absolute paths when specifying the source paths from your host machine.
+Similarly, you can bind mount other files or even whole directories that you may need to have inside the container. For example, if you will upload files to Rucio, you may want to mount the whole directory containing the files. As a general rule, use always absolute paths when specifying the source paths on your host machine to be mounted.
 
-Another thing you may need to do is to set environment variables inside the container. As already mentioned above, this is done by means of the `--env (-e)` option of `docker run` command. Here is an extension of the example `docker run` command shown above where we set the `X509_USER_CERT` and `X509_USER_KEY` environment variables and bind mount the user certificate and private key into the container, which is what you would need to do if you use authentication with X.509:
-
-```
-$ docker run --rm --user root -it -v /path/to/rucio.cfg:/opt/rucio/etc/rucio.cfg -v /path/to/usercert.pem:/opt/rucio/etc/usercert.pem -v /path/to/userkey.pem:/opt/rucio/etc/userkey.pem -e X509_USER_CERT=/opt/rucio/etc/usercert.pem -e X509_USER_KEY=/opt/rucio/etc/userkey.pem  --name=my-et-rucio-client ghcr.io/vre-hub/et-rucio-client[:imagetag]
-```
+Another thing you may need to do is to set environment variables inside the container. As already mentioned above, this is done by means of the `--env (-e)` option of `docker run` command.
 
 ## Image tag naming rules and convention
 
