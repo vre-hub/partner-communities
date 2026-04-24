@@ -1,5 +1,5 @@
 ARG BASEIMAGE=rucio/rucio-clients
-ARG BASETAG=release-38.5.1
+ARG BASETAG=release-40.0.0
 
 FROM ${BASEIMAGE}:${BASETAG}
 
@@ -9,9 +9,6 @@ USER root
 RUN curl -Lo /etc/yum.repos.d/egi-trustanchors.repo https://repository.egi.eu/sw/production/cas/1/current/repo-files/egi-trustanchors.repo \
     && yum update -y \
     && dnf -y install ca-certificates ca-policy-egi-core
-
-# Multi-RI modification from Matti
-ADD --chmod=0755 rucio-mri /usr/local/bin/rucio-mri
 
 USER user
 
