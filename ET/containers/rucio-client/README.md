@@ -76,7 +76,7 @@ Every new commit to the `main` branch of this project that modifies a file in th
 
 - If the commit has an associated git tag, use the git tag as the docker image tag. If in addition the git tag doesn't contain the string `-rc`, move the `latest` image tag to this docker image. These are the images that are supposed to be good for use. **Users should always use the image with the `latest` tag.**
 
-- Otherwise, use the latest git tag in the history of the `main` branch and add to it a string of the kind `-N-SHA` where `N` is the distance (measured in number of commits) from the latest tag in the `main` branch, and `SHA` is the short SHA of the commit that triggered the build.
+- Otherwise, use the first 7 characters of the commit SHA and prepend it with the string `dev-`.
 
 The idea behind these rules is the following:
 
