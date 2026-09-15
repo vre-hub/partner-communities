@@ -4,7 +4,7 @@ auth_host = https://et-rucio-server.to.infn.it:443
 auth_type = oidc
 oidc_issuer = et-indigo-iam
 oidc_audience = rucio
-oidc_scope = openid profile
+oidc_scope = openid profile wlcg wlcg.groups storage.read:/ storage.create:/ storage.modify:/
 oidc_polling = true
 request_retries = 3
 multi_host_commands = whoami, ping, list, download
@@ -14,4 +14,4 @@ multi_host_servers = ET server, CE server
 config_file = /opt/rucio/etc/rucio.cfg
 
 [CE server]
-config_file = /opt/rucio/etc/rucio_CE.cfg
+config_file = /opt/rucio/etc/rucio_CE_mri.cfg

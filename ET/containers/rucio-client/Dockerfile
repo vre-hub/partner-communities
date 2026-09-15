@@ -1,5 +1,5 @@
 ARG BASEIMAGE=rucio/rucio-clients
-ARG BASETAG=release-40.0.0
+ARG BASETAG=release-41.2.1
 
 FROM ${BASEIMAGE}:${BASETAG}
 
